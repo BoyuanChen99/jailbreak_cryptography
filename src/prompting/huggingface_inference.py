@@ -16,7 +16,7 @@ FILE_PATH = f'../../data/encrypted_variants_jailbreakbench/{ENCODING}.jsonl'
 # FILE_PATH = f'../../data/{ENCODING}.jsonl'
 OUTPUT_PATH = f'../../data/responses/{MODEL_NAME.split("/")[-1]}/{ENCODING}.jsonl'
 HUGGINGFACE_CACHE_DIR = '/data/data/dhanda/huggingface_cache'
-HUGGINGFACE_TOKEN = open('../keys/huggingface.key').read()
+HUGGINGFACE_TOKEN = open('../keys/huggingface.key').read().strip()
 
 
 def parse_args():

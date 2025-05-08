@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH -q nvidia-xxl
+#SBATCH -q ebrainccs
 #SBATCH -p nvidia
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
@@ -8,11 +8,7 @@
 #SBATCH --gres=gpu:a100:1
 #SBATCH --time=23:59:59
 #SBATCH --mem=50GB
-
-# Set encoding parameter here
-encoding=base_64
-
-#SBATCH --job-name=nc-${encoding}
+#SBATCH --job-name=nc-leetspeak
 
 module purge
 
@@ -26,4 +22,4 @@ conda activate cipherword
 export HF_HOME='/scratch/bc3194/huggingface_cache'
 
 # Call python script with the encoding variable
-python -u huggingface_inference.py --encoding=${encoding}
+python -u huggingface_inference.py --encoding=rot13
