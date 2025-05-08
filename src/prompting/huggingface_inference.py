@@ -5,6 +5,7 @@ import argparse
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import argparse
+import os
 
 MODEL_NAME = 'tiiuae/Falcon3-10B-Instruct'
 CONTEXT_LENGTH = 8192
@@ -118,9 +119,11 @@ if __name__ == '__main__':
         model_name_or_path = args.model
     )
     
+    if not os.path.exists('../../data/responses/malicious_instruct/'):
+        os.mkdir('../../data/responses/malicious_instruct/')
     huggingface_instance.prompt_dataset(
-        input_file_path = f'../../data/encrypted_variants_jailbreakbench/{args.encoding}.jsonl',
-        output_file_path = f'../../data/responses/{MODEL_NAME.split("/")[-1]}/{args.encoding}.jsonl',
+        input_file_path = f'../../data/encrypted_variants_malicious_instruct/{args.encoding}.jsonl',
+        output_file_path = f'../../data/responses/malicious_instruct/{MODEL_NAME.split("/")[-1]}/{args.encoding}.jsonl',
         idx = args.index,
         context_length = args.context,
         temperature = args.temperature
