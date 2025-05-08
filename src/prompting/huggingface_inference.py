@@ -4,7 +4,6 @@ from pathlib import Path
 import argparse
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from pprint import pprint
 import argparse
 
 MODEL_NAME = 'tiiuae/Falcon3-10B-Instruct'
@@ -120,8 +119,8 @@ if __name__ == '__main__':
     )
     
     huggingface_instance.prompt_dataset(
-        input_file_path = f'../../data/encrypted_variants_jailbreakbench/{args.encoding}.jsonl'
-        output_file_path = args.output,
+        input_file_path = f'../../data/encrypted_variants_jailbreakbench/{args.encoding}.jsonl',
+        output_file_path = f'../../data/responses/{MODEL_NAME.split("/")[-1]}/{ENCODING}.jsonl',
         idx = args.index,
         context_length = args.context,
         temperature = args.temperature
