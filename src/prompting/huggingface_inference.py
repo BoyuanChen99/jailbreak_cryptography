@@ -5,13 +5,15 @@ import argparse
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from pprint import pprint
-MODEL_NAME = 'meta-llama/Meta-Llama-3.1-8B-Instruct'
-CONTEXT_LENGTH = 4096
-TEMPERATURE = 0.1 # Not currently in use, defaults to 1
+import argparse
+
+MODEL_NAME = 'tiiuae/Falcon3-10B-Instruct'
+CONTEXT_LENGTH = 8192
+TEMPERATURE = 0.0 # Not currently in use, defaults to do_sample=False
 ENCODING = 'wordsubstitution'
 INDEX = 0
 
-FILE_PATH = f'../../data/encrypted_variants/{ENCODING}.jsonl'
+FILE_PATH = f'../../data/encrypted_variants_jailbreakbench/{ENCODING}.jsonl'
 # FILE_PATH = f'../../data/{ENCODING}.jsonl'
 OUTPUT_PATH = f'../../data/responses/{MODEL_NAME.split("/")[-1]}/{ENCODING}.jsonl'
 HUGGINGFACE_CACHE_DIR = '/data/data/dhanda/huggingface_cache'
@@ -25,6 +27,7 @@ def parse_args():
     parser.add_argument('-o', '--output', type=str, default=OUTPUT_PATH, required=False, help='Output file path')
     parser.add_argument('-c', '--context', type=int, default=CONTEXT_LENGTH, required=False, help='Context length')
     parser.add_argument('-t', '--temperature', type=str, default=TEMPERATURE, required=False, help='Temperature of the model')
+    parser.add_argument('-e', '--encoding', type=str, default=ENCODING, required=False, help='The encoding of the dataset.')
     parser.add_argument('-d', '--huggingface_cache_dir', type=str, default=HUGGINGFACE_CACHE_DIR, required=False, help='Huggingface cache directory')
     parser.add_argument('-k', '--huggingface_token', type=str, default=HUGGINGFACE_TOKEN, required=False, help='Huggingface token key')
     parser.add_argument('-i', '--index', type=int, default=INDEX, required=False, help='Starting zero-index for evaluation')
@@ -49,7 +52,7 @@ class HuggingInference:
     def _load_tokenizer(self):
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.tokenizer_name,
-            cache_dir = self.cache_dir,
+            # cache_dir = self.cache_dir,
             token = self.token,
             trust_remote_code = True
         )
@@ -60,7 +63,7 @@ class HuggingInference:
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_name_or_path,
             device_map = 'auto',
-            cache_dir = self.cache_dir,
+            # cache_dir = self.cache_dir,
             token = self.token,
             trust_remote_code = True
         )
@@ -78,7 +81,8 @@ class HuggingInference:
             return self.tokenizer.decode(
                 self.model.generate(
                     **input_ids.to('cuda'),
-                    max_new_tokens = 1_000,
+                    max_new_tokens = 2000,
+                    do_sample = False,
                     # temperature = temperature,
                 )[0],
                 skip_special_tokens=True
@@ -88,7 +92,7 @@ class HuggingInference:
         with open(file_path, 'a+') as f:
             f.write(json.dumps(json_ele)+ '\n')
     
-    def prompt_dataset(self, input_file_path, output_file_path, idx=0, context_length=4096, temperature=0):
+    def prompt_dataset(self, input_file_path, output_file_path, idx=0, context_length=4096, temperature=0.0):
         with open(input_file_path, 'r') as f:
             data = [json.loads(jline) for jline in f.readlines()][idx:]
             
@@ -116,7 +120,7 @@ if __name__ == '__main__':
     )
     
     huggingface_instance.prompt_dataset(
-        input_file_path = args.file,
+        input_file_path = f'../../data/encrypted_variants_jailbreakbench/{args.encoding}.jsonl'
         output_file_path = args.output,
         idx = args.index,
         context_length = args.context,
