@@ -8,7 +8,7 @@
 #SBATCH --gres=gpu:a100:1
 #SBATCH --time=23:59:59
 #SBATCH --mem=50GB
-#SBATCH --job-name=nc-leetspeak
+#SBATCH --job-name=nc-base_64
 
 module purge
 
@@ -22,4 +22,4 @@ conda activate cipherword
 export HF_HOME='/scratch/bc3194/huggingface_cache'
 
 # Call python script with the encoding variable
-python -u huggingface_inference.py --encoding=rot13
+python -u huggingface_inference.py --encoding=base_64
