@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#SBATCH -q ebrainccs
+#SBATCH -q nvidia-xxl
 #SBATCH -p nvidia
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
-#SBATCH --gres=gpu:a100:1
+#SBATCH --gres=gpu:v100:1
 #SBATCH --time=23:59:59
 #SBATCH --mem=50GB
 #SBATCH --job-name=nc-base_64
