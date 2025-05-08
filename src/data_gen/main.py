@@ -12,8 +12,8 @@ from art_prompt import ArtPrompt
 
 
 # Dataset should contain keys: ['question', 'category', 'priming_sentence']
-DATASET_PATH = '../../data/jailbreakbench.jsonl'
-SAVE_DIR = '../../data/encrypted_variants_jailbreakbench'
+DATASET_PATH = '../../data/malicious_instruct.jsonl'
+SAVE_DIR = '../../data/encrypted_variants_malicious_instruct'
 
 if __name__ == '__main__':
     for class_instance in EncodeDataset.__subclasses__():
